@@ -12,7 +12,7 @@ let s:beSource = {
 
 
 " define unite source
-function! unite#sources#battle_editor#define()
+function! unite#sources#battle_editors#define()
     return s:beSource
 endfunction
 
