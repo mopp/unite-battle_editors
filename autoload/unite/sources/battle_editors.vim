@@ -20,20 +20,21 @@ endfunction
 " define unite action
 let s:beSource.action_table.open = { 'description': 'open selected article in buffer' }
 function! s:beSource.action_table.open.func(arg)
-    let tmpFileName = tempname()
+    " あれば削除
+    if 0 != bufexists('BATTLE_EDITORS')
+        silent exe 'bwipeout! "BATTLE_EDITORS"'
+    endif
 
-    try
-        silent exe 'vertical botright split edit'
-        call append(0, s:alignArticle(a:arg.article_data))
-        call cursor(1, 1)
+    silent exe 'vertical botright split edit'
+    silent file BATTLE_EDITORS
 
-        " TODO:バッファ名チェックを追加
-        silent file BATTLE_EDITORS
-        setlocal fileformat=unix buftype=nofile filetype=text wrap
-        silent! %foldopen
-    finally
-        call delete(tmpFileName)
-    endtry
+    " バッファへ書き込み
+    call append(0, s:alignArticle(a:arg.article_data))
+    call cursor(1, 1)
+
+    " 設定値変更
+    setlocal fileformat=unix buftype=nofile filetype=text wrap
+    silent! %foldopen
 endfunction
 
 
