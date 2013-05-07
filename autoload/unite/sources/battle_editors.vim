@@ -22,14 +22,14 @@ let s:beSource.action_table.open = { 'description': 'open selected article in bu
 function! s:beSource.action_table.open.func(arg)
     " あれば削除
     if 0 != bufexists('BATTLE_EDITORS')
-        silent exe 'bwipeout! "BATTLE_EDITORS"'
+        silent exe 'bdelete! BATTLE_EDITORS'
     endif
 
     silent exe 'vertical botright split edit'
     silent file BATTLE_EDITORS
 
     " バッファへ書き込み
-    call append(0, s:alignArticle(a:arg.article_data))
+    call append(0, s:align_article(a:arg.article_data))
     call cursor(1, 1)
 
     " 設定値変更
@@ -41,7 +41,7 @@ endfunction
 " generate unite candidates
 function! s:beSource.gather_candidates(args, context)
     if len(a:args) == 0
-        return map(s:getPlaneArticleData(), "{
+        return map(s:get_plane_article_date(), "{
                     \ 'word': v:val.title,
                     \ 'abbr': v:val.title,
                     \ 'kind': 'common',
@@ -53,7 +53,7 @@ function! s:beSource.gather_candidates(args, context)
 endfunction
 
 
-function! s:getPlaneArticleData()
+function! s:get_plane_article_date()
     let url = 'http://vinarian.blogspot.jp/rss.xml'
 
     " 関連記事を保存
@@ -71,7 +71,7 @@ function! s:getPlaneArticleData()
 endfunction
 
 
-function! s:alignArticle(artDict)
+function! s:align_article(artDict)
     " substitute(nled, '<[a-z\/]\+[^>]*>', '', 'g')
     " substitute(nled, '</?^(br)[^><]*>', '', 'g')
 
