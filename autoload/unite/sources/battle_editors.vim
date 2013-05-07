@@ -1,4 +1,5 @@
 scriptencoding utf-8
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -57,17 +58,17 @@ function! s:get_plane_article_date()
     let url = 'http://vinarian.blogspot.jp/rss.xml'
 
     " 関連記事を保存
-    let beArticle = []
+    let articles = []
 
     " タイトルから記事一覧を取得
     " item の key は id, link, date, title, content
     for item in webapi#feed#parseURL(url)
         if '' != matchstr(item.title, 'エディターズ')
-            call add(beArticle, item)
+            call add(articles, map(item, "substitute(v:val, '　', '  ', 'g')"))
         endif
     endfor
 
-    return beArticle
+    return articles
 endfunction
 
 
