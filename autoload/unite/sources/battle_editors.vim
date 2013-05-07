@@ -23,10 +23,11 @@ function! s:beSource.action_table.open.func(arg)
     let tmpFileName = tempname()
 
     try
-        " echo s:alignArticle(a:arg.article_data)
-        call writefile(s:alignArticle(a:arg.article_data), tmpFileName)
+        silent exe 'vertical botright split edit'
+        call append(0, s:alignArticle(a:arg.article_data))
+        call cursor(1, 1)
 
-        silent exe ':vertical botright split ' tmpFileName
+        " TODO:バッファ名チェックを追加
         silent file BATTLE_EDITORS
         setlocal fileformat=unix buftype=nofile filetype=text wrap
         silent! %foldopen
@@ -38,20 +39,16 @@ endfunction
 
 " generate unite candidates
 function! s:beSource.gather_candidates(args, context)
-    let candidates = []
-
     if len(a:args) == 0
-        for elem in s:getPlaneArticleData()
-            call add(candidates, {
-                        \ 'word': elem.title,
-                        \ 'abbr': elem.title,
-                        \ 'kind': 'directory',
-                        \ 'article_data' : elem
-                        \})
-        endfor
+        return map(s:getPlaneArticleData(), "{
+                    \ 'word': v:val.title,
+                    \ 'abbr': v:val.title,
+                    \ 'kind': 'common',
+                    \ 'article_data' : v:val
+                    \}")
     endif
 
-    return candidates
+    return []
 endfunction
 
 
